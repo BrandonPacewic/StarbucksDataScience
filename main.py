@@ -28,28 +28,32 @@ class Nutrition_facts:
     def __init__(self, 
         calories: str, total_fat: str, saturated_fat: str, 
         trans: str, cholesterol: str, sodium: str, total_carbohydrate: str, 
-        dietary_fiber: str, sugars: str, protein: str) -> None:
+        fibre: str, sugars: str, protein: str) -> None:
         try:
             self.calories = float(calories)
             self.total_fat = float(total_fat)
             self.trans = float(trans)
-            self.saturated_fat = float(saturated_fat)
+            self.saturated = float(saturated_fat)
             self.cholesterol = float(cholesterol)
             self.sodium = float(sodium)
             self.total_carbohydrate = float(total_carbohydrate)
-            self.dietary_fiber = float(dietary_fiber)
+            self.fibre = float(fibre)
             self.sugars = float(sugars)
             self.protein = float(protein)
         except ValueError:
             print(f'Error: Could not convert str to float, check the nutrition facts data for whitespace.')
             exit(1)
 
-    # Take a drink object and create a Nutrition_facts object from it
-    def __init__(self, drink: object) -> None:
-        self.calories = drink.calories
-        self.total_fat = drink.total_fat
-        self.trans = drink.trans
-        
+    def output(self) -> None:
+        print(f'Calories: {self.calories}')
+        print(f'Total fat: {self.total_fat}')
+        print(f'Saturated fat: {self.saturated}')
+        print(f'Cholesterol: {self.cholesterol}')
+        print(f'Sodium: {self.sodium}')
+        print(f'Total carbohydrates: {self.total_carbohydrate}')
+        print(f'Fibre: {self.fibre}')
+        print(f'Sugars: {self.sugars}')
+        print(f'Protein: {self.protein}')
 
 
 # Basic starbucks drink class
@@ -77,25 +81,26 @@ class Drink(Nutrition_facts):
         self.calcium = Percentage(calcium)
         self.iron = Percentage(iron)
 
-
     # Returns the max amounts of vitamins and minerals
     # contained between the two drinks
     def max_nutrition_facts(self, other: 'Nutrition_facts') -> Nutrition_facts:
         max_calories = max(self.calories, other.calories)
+        max_total_fat = max(self.total_fat, other.total_fat)
         max_saturated_fat = max(self.saturated, other.saturated)
         max_trans_fat = max(self.trans, other.trans)
         max_cholesterol = max(self.cholesterol, other.cholesterol)
         max_sodium = max(self.sodium, other.sodium)
+        max_total_carbohydrate = max(self.total_carbohydrate, other.total_carbohydrate)
         max_fibre = max(self.fibre, other.fibre)
         max_sugars = max(self.sugars, other.sugars)
         max_protein = max(self.protein, other.protein)
 
         # Returns a new nutrition facts object with the max values
         return Nutrition_facts(
-            str(max_calories), str(max_saturated_fat),
-            str(max_trans_fat), str(max_cholesterol),
-            str(max_sodium), str(max_fibre),
-            str(max_sugars), str(max_protein))
+            str(max_calories), str(max_total_fat),
+            str(max_saturated_fat), str(max_trans_fat),
+            str(max_cholesterol), str(max_sodium), str(max_fibre), 
+            str(max_total_carbohydrate), str(max_sugars), str(max_protein))
 
 
 def main() -> None:
@@ -166,7 +171,22 @@ def main() -> None:
         print(f'{i + 1}. {prep}')
 
     # Find the max values for each nutrition fact and print them
-    
+    max_nutrition_facts = Nutrition_facts(
+        drinks[0].calories, drinks[0].total_fat, drinks[0].saturated,
+        drinks[0].trans, drinks[0].cholesterol, drinks[0].sodium, 
+        drinks[0].total_carbohydrate, drinks[0].fibre, 
+        drinks[0].sugars, drinks[0].protein)
+
+    print(f'\nMaximum Nutrition fact values:')
+
+    for i, drink in enumerate(drinks):
+        if i == 0:
+            continue
+
+        max_nutrition_facts = drink.max_nutrition_facts(max_nutrition_facts)
+
+    # Print the max values for each nutrition fact
+    max_nutrition_facts.output()
 
 
 if __name__ == '__main__':
